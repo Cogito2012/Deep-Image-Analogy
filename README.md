@@ -2,8 +2,6 @@
 
 # Deep Image Analogy
 
-The major contributors of this repository include [Jing Liao](https://liaojing.github.io/html/index.html), [Yuan Yao](http://yuanyao.info/), [Lu Yuan](http://www.lyuan.org/), [Gang Hua](http://www.ganghua.org/) and [Sing Bing Kang](http://www.singbingkang.com/publications/) at Microsoft Research.
-
 ## Introduction
 
 **Deep Image Analogy** is a technique to find semantically-meaningful dense correspondences between two input images. It adapts the notion of image analogy with features extracted from a Deep Convolutional Neural Network.
@@ -16,11 +14,10 @@ The major contributors of this repository include [Jing Liao](https://liaojing.g
 
 ## Disclaimer
 
-This is an official C++ combined with CUDA implementation of [Deep Image Analogy](https://arxiv.org/abs/1705.01088). It is worth noticing that:
-- Our codes are based on [Caffe](https://github.com/Microsoft/caffe).
-- Our codes only have been tested on Windows 10, Windows Server 2012 R2 and Ubuntu with CUDA 8 or 7.5.
-- Our codes only have been tested on several Nvidia GPU: Titan X, Titan Z, K40, GTX770.
-- The size of input image is limited, mostly should not be large than 700x500 if you use 1.0 for parameter **ratio**.
+This is an reimplemention of [Deep Image Analogy](https://github.com/msracver/Deep-Image-Analogy/tree/linux) with C++ combined with CUDA. It is worth noticing that:
+- The codes are based on [Caffe](https://github.com/Microsoft/caffe).
+- The codes only have been tested on Ubuntu with CUDA 8 or 7.5.
+- The codes only support for machine with GPU, and have been tested on Nvidia GeoForce GTX 1080.
 
 
 ## License
@@ -38,69 +35,58 @@ If you find **Deep Image Analogy** (include deep patchmatch) helpful for your re
   }
 ```
 
-## Application
-
-### Photo to Style
-
-One major application of our code is to transfer the style from a painting to a photo.
-<div>
-<img src="https://github.com/msracver/Deep-Image-Analogy/blob/master/windows/deep_image_analogy/example/readme/p2s1.png"/>
-<img src="https://github.com/msracver/Deep-Image-Analogy/blob/master/windows/deep_image_analogy/example/readme/p2s2.png"/>
-</div>
-
-### Style to Style
-
-It can also swap the styles between two artworks.
-
-![image](https://github.com/msracver/Deep-Image-Analogy/blob/master/windows/deep_image_analogy/example/readme/s2s.png)
-
-### Style to Photo
-
-The most challenging application is converting a sketch or a painting to a photo.
-
-<img src = "https://github.com/msracver/Deep-Image-Analogy/blob/master/windows/deep_image_analogy/example/readme/s2p3.png">
-
-<img src = "https://github.com/msracver/Deep-Image-Analogy/blob/master/windows/deep_image_analogy/example/readme/s2p4.png">
-
-### Photo to Photo
-
-It can do color transfer between two photos, such as generating time lapse.
-
-![image](https://github.com/msracver/Deep-Image-Analogy/blob/master/windows/deep_image_analogy/example/readme/p2p.png)
-
 ## Getting Started
 
 ### Prerequisite
 
-- Linux or Mac OS X
-- CUDA 8 or 7.5
+- Linux and CUDA 8 or 7.5
 
 ### Configure & Build
 
 - Install dependencies for building Caffe. Just follow the tutorial from [Caffe](http://caffe.berkeleyvision.org/).
-- Use configuration script by typing ```sh scripts/config_deep_image_analogy.sh```.
+- Use configuration script to download [VGG19 Caffemodel](http://www.robots.ox.ac.uk/~vgg/software/very_deep/caffe/VGG_ILSVRC_19_layers.caffemodel) by typing ```sh scripts/config_deep_image_analogy.sh```.
 - Modify the CUDA path in ```Makefile.config.example``` and rename it to ```Makefile.config```.
 - Compile Caffe, make sure you installed all the dependencies before. Just type ```make all```.
 - Compile deep_image_analogy by ```sh scripts/make_deep_image_analogy.sh```.
 - Add libraries built by Caffe into ```LD_LIBRARY_PATH``` by ```export LD_LIBRARY_PATH="./build/lib"```.
 
+### Datastets
+
+To run the codes for multiple images, the input datasets are required to be formed as follow steps:
+
+- Put the content images and style images into ```./deep_image_analogy/images_content``` and ```./deep_image_analogy/images_style``` folders.
+- Edit the configuration in ```./script/generate_list.sh``` and then run
+```sudo sh ./script/generate_list.sh``` to generate file lists.
+
+- Finally, the datasets will be formed as follows:
+```
+--- datasets/images_content/*.jpg
+--- datasets/images_style/*.jpg
+--- datasets/content_list.txt
+--- datasets/style_list.txt
+```
+
+**Tips:** The size of input image is limited, mostly should not be large than 700x500 if you use 1.0 for parameter **ratio**.
+
 ### Demo
-
-Open ```main.cpp``` in ```deep_image_analogy/source/``` to see how to run a demo. You need to set several parameters which have been mentioned in the paper. To be more specific, you need to set
-
-- **path_model**, where the VGG-19 model is.
-- **path_A**, the input image A.
-- **path_BP**, the input image BP.
-- **path_output**, the output path.
-- **GPU Number**, GPU ID you want to run this experiment.
-- **Ratio**, the ratio to resize the inputs before sending them into the network.
-- **Blend Weight**, the level of weights in blending process.
-- **Flag of WLS Filter**, if you are trying to do photo style transfer, we recommend to switch this on to keep the structure of original photo.
 
 To run the demo, just type:
 ```
 ./demo deep_image_analogy/models/ deep_image_analogy/demo/content.png deep_image_analogy/demo/style.png deep_image_analogy/demo/output/ 0 0.5 2 0
 ```
+
+You need to set several parameters which have been mentioned in the paper. To be more specific, you need to set
+
+- **path_model**, where the VGG-19 model is.
+- **path_A**, the file list of input content images A.
+- **path_BP**, the file list of input style images BP.
+- **path_output**, the output path, will be created automatically.
+- **GPU Number**, GPU ID you want to run this experiment.
+- **Ratio**, the ratio to resize the inputs before sending them into the network.
+- **Blend Weight**, the level of weights in blending process.
+- **Flag of WLS Filter**, if you are trying to do photo style transfer, we recommend to switch this on to keep the structure of original photo.
+
+
 
 ### Tips
 

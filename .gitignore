@@ -105,9 +105,9 @@ MANIFEST-*
 
 
 # new ignore options for multiple images translation
-deep_image_analogy/datasets/images_content/*
-deep_image_analogy/datasets/images_style/*
-deep_image_analogy/datasets/*.txt
+#deep_image_analogy/datasets/images_content/*
+#deep_image_analogy/datasets/images_style/*
+#deep_image_analogy/datasets/*.txt
 deep_image_analogy/output
 
 
