@@ -72,7 +72,7 @@ To run the codes for multiple images, the input datasets are required to be form
 
 To run the demo, just type:
 ```
-./demo deep_image_analogy/models/ deep_image_analogy/demo/content.png deep_image_analogy/demo/style.png deep_image_analogy/demo/output/ 0 0.5 2 0
+sh ./script/experiments_run_multi.sh
 ```
 
 You need to set several parameters which have been mentioned in the paper. To be more specific, you need to set
